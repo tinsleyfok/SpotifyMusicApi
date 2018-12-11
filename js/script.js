@@ -24,22 +24,6 @@ for (i = 0; i < station_show.length; i++) {
 
 
 
-//let year_show = document.getElementsByClassName("timeline")[0];
-//let i;
-//
-//year_show.addEventListener("click", function (e) {
-//    console.log(e.target);
-//    let year_item = e.target.nextElementSibling;
-//    console.log(year_item);
-//    year_item.style.display = block;
-//       console.log(year_item.style.display);
-//    if (year_item.style.display === "block") {
-//        year_item.style.display = "none";
-//    } else {
-//        year_item.style.display === "block";
-//    }
-//});
-
 //songlist array  
 const songlists = [{
         name: "Lexington Ave - 53rd St",
@@ -114,14 +98,15 @@ const songlists = [{
 
 
 //map - using mapbox api  
-const maxBounds = [[-73.968, 40.733], [-73.868, 40.833]];
+const maxBounds = [[-73.968, 40.685], [-73.868, 40.785]];
 
 mapboxgl.accessToken = 'pk.eyJ1IjoidGluc2xleWZvayIsImEiOiJjam9rZzVibzMwNXVnM3FvNHZ5eHh4MWo4In0.iYRMgrgBQTlKgA9r9Pc4ng';
 var map = new mapboxgl.Map({
     container: 'map',
     style: "mapbox://styles/tinsleyfok/cjp9fszua8h3i2ro7p1cx41p9",
     center: [-73.968, 40.733],
-    zoom: 13,
+    zoom: 11,
+    attributionControl: false,
     maxBounds: [
       [maxBounds[0][0] - 0.1, maxBounds[0][1] - 0.1],
       [maxBounds[1][0] + 0.1, maxBounds[1][1] + 0.1]
@@ -227,6 +212,7 @@ map.on('click', 'points', function (e) {
         center: e.features[0].geometry.coordinates
     });
 
+
     //click each feature to play song
     let stationname = e.features[0].properties.name;
     for (n = 0; n < songlists.length; n++) {
@@ -276,69 +262,46 @@ let playsong = new Audio();
 
 for (j = 0; j < songlists.length; j++) {
     gt[j].addEventListener("click", function (e) {
-                e.target.classList.add('active');
-                let trackname = e.target.getAttribute('data-name');
-                console.log(trackname);
-                for (n = 0; n < songlists.length; n++) {
-                    let getarrayname = songlists[n].name;
-                    console.log(getarrayname);
-                    let audio = songlists[n].url;
-                    if (trackname == getarrayname) {
-                        console.log(audio);
-                        playsong.src = audio;
-                        playsong.play();
-                         
-                    }
-                }
 
-                let staionname = "";
-                //  for (n = 0; n < data.features.length; n++) {
-                stationname = data.features;
-                console.log(stationname);
-                console.log(trackname);
-                for (n = 0; n < data.features.length; n++) {
-                    if (stationname[n].properties.name == trackname) {
-                        let location = stationname[n].geometry.coordinates;
-                        map.flyTo({
-                          zoom: 15,
-                          center:location
-                                                     });
+        let active = document.getElementsByClassName("active");
+        console.log(active);
+    [].forEach.call(active, function (e) {
+            e.classList.remove("active");
+        });
 
-                            }
-                        }
+        e.target.classList.add('active');
+        let trackname = e.target.getAttribute('data-name');
+        console.log(trackname);
+        for (n = 0; n < songlists.length; n++) {
+            let getarrayname = songlists[n].name;
+            console.log(getarrayname);
+            let audio = songlists[n].url;
+            if (trackname == getarrayname) {
+                console.log(audio);
+                playsong.src = audio;
+                playsong.play();
 
-
-
-                        //    console.log(stationname);
-                        //        let element_name = document.querySelectorAll('["' + trackname + '""' + stationname + '"]')[0];
-                        //        console.log(element_name);
-
-                        //how to link back to geojson file?
-
-                        //this is the json file elements:
-                        //        console.log(data);
-
-                        //this gets all name from json file:
-                        //        for (n = 0; n < data.features.length; n++) {
-                        //            let stationsname = data.features[n].properties.name;
-                        //            }
-
-                        //this is the station name I click from navigator:  
-                        //        console.log(trackname); 
-
-                        //I need to get "xxx.properties.name" = "trackname" 
-                        //and use the "xxx.properties.name" to center the map
-                        //let element_name = document.querySelectorAll('[data-name="' + stationname + '"]')[0];
-                        //I don't think this works 
-
-                        //the is the function I want to make after I get the same geolocation from json file   
-                        //                                map.flyTo({
-                        //                                    zoom: 15,
-                        //                                    center: xxx.geometry.coordinates
-                        //                                });
-
-                    });
             }
+        }
 
-            //still need to figure out why the navigator is not working 
-            //still need to style the nagigator color when song play - I can do it by myself
+        let staionname = "";
+        //  for (n = 0; n < data.features.length; n++) {
+        stationname = data.features;
+        console.log(stationname);
+        console.log(trackname);
+        for (n = 0; n < data.features.length; n++) {
+            if (stationname[n].properties.name == trackname) {
+                let location = stationname[n].geometry.coordinates;
+                map.flyTo({
+                    zoom: 15,
+                    center: location
+                });
+
+            }
+        }
+    });
+}
+
+//audio icon
+
+
