@@ -1,0 +1,133 @@
+@import url("https://fonts.googleapis.com/css?family=Tinos");
+
+html,
+body {
+    
+    font-family: Tinos;
+    letter-spacing: 1px;
+
+}
+
+#title {
+    color: white;
+    padding-left: 10px;
+    width:10%;
+    
+
+}
+
+
+/*
+timeline
+*/
+
+.genres {
+    color: white;
+    font-style: italic;
+    position: absolute;
+    top: 40%;
+    left: 0%;
+    padding: 0;
+    margin: 0;
+    color: #fff;
+
+}
+
+.genres li {
+    cursor: pointer;
+    position: relative;
+    padding: 10px 0 10px 50px;
+    list-style:none;
+}
+.genres li::before {
+    display: block;
+    content: '';
+    position: absolute;
+    top: 13px;
+    left: 20px;
+    z-index: 2;
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border-radius: 50%;
+}
+
+.genres li:nth-of-type(1)::before {
+  background-color: #BC1D29;
+}
+
+.genres li:nth-of-type(2)::before {
+  background-color: #08B250;
+}
+
+.genres li:nth-of-type(3)::before{
+  background-color: #D615E4;
+}
+
+.genres li:nth-of-type(4)::before {
+ background-color: #FFD91D;
+}
+
+.genres li:nth-of-type(5)::before {
+  background-color: #6072D8;
+}
+
+.genres li:nth-of-type(1) p.active{
+    color:#BC1D29;
+}
+.genres li:nth-of-type(2) p.active{
+    color:#08B250;
+}
+.genres li:nth-of-type(3) p.active{
+    color:#D615E4;
+}
+.genres li:nth-of-type(4) p.active{
+    color:#FFD91D;
+}
+.genres li:nth-of-type(5) p.active{
+    color:#6072D8;
+}
+
+.train:hover {
+    text-decoration: line-through;
+}
+
+
+.train {
+    font-size: .9em;
+    color: white;
+    width: 100;
+
+
+}
+
+.genres p {
+    font-size: .8em;
+
+
+}
+
+
+.station {
+    display: none;
+    padding-left: 10px;
+}
+
+.station p:hover {
+    text-decoration: line-through;
+}
+
+/*map*/
+#map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: -10;
+}
+
+
+
+
+
