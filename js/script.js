@@ -1,16 +1,21 @@
 //The project made by Mapbox GL Api
 //The subway station data is from Open Data New York 
 //https://data.cityofnewyork.us/Transportation/Subway-Stations/arq3-7z49
+//the gitgub link 
+//https://github.com/tinsleyfok/musicundernewyork
 
-//geojson name = array name --> play song  
-//menu name = geojson name 
+
 
 console.log("Tinsley Huo 12/05/2018");
+let i;
+let n;
+let active = document.getElementsByClassName("active"); //add class active to the nav
+let playsong = new Audio();
 
 
 //navigator 
+//when click the genre, teh station name shows
 let station_show = document.getElementsByClassName("train");
-let i;
 for (i = 0; i < station_show.length; i++) {
     station_show[i].addEventListener("click", function (e) {
         let station_item = this.nextElementSibling;
@@ -24,7 +29,12 @@ for (i = 0; i < station_show.length; i++) {
 
 
 
-//songlist array  
+//songlist array 
+//the name is equel to the name in json file 
+//maybe in the future, i will put the song on soundcloud
+//now it's just local
+//how to create a seperate json file? 
+
 const songlists = [{
         name: "Lexington Ave - 53rd St",
         url: "data/51.mp3",
@@ -97,9 +107,13 @@ const songlists = [{
 
 
 
-//map - using mapbox api  
+//map - using mapbox api
+//link to the mapbox api 
 const maxBounds = [[-73.968, 40.685], [-73.868, 40.785]];
-
+//the token is free on mapbox api website
+//need to create an account frist 
+//then create different style map and copy the link 
+//always can change the center point and zoom in scale
 mapboxgl.accessToken = 'pk.eyJ1IjoidGluc2xleWZvayIsImEiOiJjam9rZzVibzMwNXVnM3FvNHZ5eHh4MWo4In0.iYRMgrgBQTlKgA9r9Pc4ng';
 var map = new mapboxgl.Map({
     container: 'map',
@@ -113,19 +127,19 @@ var map = new mapboxgl.Map({
     ]
 });
 
+//load the geojson file 
+//using jquery to load the geojson file 
+//create a variable called data 
 var data = {}
-
-
 $.getJSON("js/station.geojson", function (json) {
     console.log(json);
     data = json;
     drawData();
 })
 
-
-
-
-
+//function drawData 
+//draw and scale the circles based on the music genre 
+//change the color and opacity base on the music genre 
 function drawData() {
     map.on("load", function () {
         map.addLayer({
@@ -180,6 +194,9 @@ function drawData() {
 
 
 //create pop-up information
+//when mouse over showing the subway station name 
+//when muse out the pop up information remove 
+
 var popup = new mapboxgl.Popup({
     closeButton: false,
     closeOnClick: false
@@ -203,6 +220,10 @@ map.on('mouseleave', 'points', function () {
     popup.remove();
 });
 
+//based on the user testing 
+//I add a zoom in zoom out controller 
+var nav = new mapboxgl.NavigationControl();
+map.addControl(nav, 'bottom-right');
 
 
 //click to zoom in/center/play song
@@ -213,82 +234,60 @@ map.on('click', 'points', function (e) {
     });
 
 
-    //click each feature to play song
+//click each feature to play song
+//when name in json file and name in songlist array equals, play song 
     let stationname = e.features[0].properties.name;
     for (n = 0; n < songlists.length; n++) {
-        console.log(stationname);
         let songlistname = songlists[n].name;
-        console.log(songlistname);
         let audio = songlists[n].url;
         if (songlistname == stationname) {
-            console.log(audio);
             playsong.src = audio;
             playsong.play();
             break;
         }
 
     }
-    //to remove the pervious active
-    let active = document.getElementsByClassName("active");
-    console.log(active);
+//to remove the pervious active
     [].forEach.call(active, function (e) {
         e.classList.remove("active");
     });
 
-    //hide all navigator first
+//hide all navigator block first
     let hide = document.getElementsByClassName("station");
     for (n = 0; n < hide.length; n++) {
         hide[n].style.display = "none";
-        console.log(hide);
     }
 
-
-    //connect to navigator
+//connect the geojson file to the navigator
     let element_name = document.querySelectorAll('[data-name="' + stationname + '"]')[0];
-    console.log(element_name);
     element_name.parentNode.style.display = "block";
     element_name.classList.add('active');
 
 });
 
 
-
 //Play song using the navigator 
-let gt = document.getElementsByClassName("track");
-let j;
-let n;
-let playsong = new Audio();
-
-
-for (j = 0; j < songlists.length; j++) {
-    gt[j].addEventListener("click", function (e) {
-
-        let active = document.getElementsByClassName("active");
-        console.log(active);
+//when click the nav, find the same name in the geojson file, then play song
+for (n = 0; n < songlists.length; n++) {
+let gt = document.getElementsByClassName("track"); 
+    gt[n].addEventListener("click", function (e) {
     [].forEach.call(active, function (e) {
             e.classList.remove("active");
         });
-
         e.target.classList.add('active');
         let trackname = e.target.getAttribute('data-name');
-        console.log(trackname);
         for (n = 0; n < songlists.length; n++) {
             let getarrayname = songlists[n].name;
-            console.log(getarrayname);
             let audio = songlists[n].url;
             if (trackname == getarrayname) {
-                console.log(audio);
                 playsong.src = audio;
                 playsong.play();
-
+                break;
             }
         }
-
+//when play song, also center the location 
         let staionname = "";
-        //  for (n = 0; n < data.features.length; n++) {
         stationname = data.features;
-        console.log(stationname);
-        console.log(trackname);
         for (n = 0; n < data.features.length; n++) {
             if (stationname[n].properties.name == trackname) {
                 let location = stationname[n].geometry.coordinates;
@@ -302,6 +301,6 @@ for (j = 0; j < songlists.length; j++) {
     });
 }
 
-//audio icon
+
 
 
